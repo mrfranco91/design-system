@@ -27,7 +27,8 @@ export interface ComponentBlock {
 
 export type Patch = 
   | { type: 'token'; tokenName: string; scope: 'root' | 'dark'; newValue: string }
-  | { type: 'component'; selectorName: string; scope: 'light' | 'dark'; property: string; newValue: string };
+  | { type: 'component-edit-prop'; selectorName: string; scope: 'light' | 'dark'; property: string; newValue: string }
+  | { type: 'component-add-prop'; selectorName: string; scope: 'light' | 'dark'; property: string; newValue: string };
 
 export interface ScanResult {
   file: string;

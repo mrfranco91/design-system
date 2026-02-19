@@ -3,13 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import ComponentInspector from './components/ComponentInspector';
 import Playground from './components/Playground';
-import SystemIntegrityScanner from './components/SystemIntegrityScanner';
-import TokenEditor from './components/TokenEditor';
+import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import { useBlueprint } from './hooks/useBlueprint';
-import { Token, ComponentBlock, ScanResult } from './types/blueprint';
+
 
 export default function App() {
   const {
@@ -44,22 +42,22 @@ export default function App() {
         isDarkMode={isDarkMode}
       />
       <main className="flex flex-1 overflow-hidden">
-        <TokenEditor tokens={tokens} applyPatch={applyPatch} isDarkMode={isDarkMode} />
+        <Sidebar 
+          tokens={tokens}
+          components={components}
+          applyPatch={applyPatch}
+          isDarkMode={isDarkMode}
+          scanResults={scanResults}
+          selectedComponent={selectedComponent}
+          onSelectComponent={setSelectedComponent}
+        />
         <Playground 
           css={getPatchedCss()} 
           isDarkMode={isDarkMode} 
           components={components}
           onSelectComponent={setSelectedComponent}
+          selectedComponent={selectedComponent}
         />
-        <div className="w-80 bg-stone-50 border-l border-stone-200 p-4 space-y-4 overflow-y-auto">
-          <ComponentInspector 
-            components={components} 
-            selectedComponent={selectedComponent} 
-            applyPatch={applyPatch} 
-            isDarkMode={isDarkMode}
-          />
-          <SystemIntegrityScanner scanResults={scanResults} />
-        </div>
       </main>
     </div>
   );

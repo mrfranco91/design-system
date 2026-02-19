@@ -81,6 +81,6 @@ export function useBlueprint() {
     reset,
     getPatchedCss,
     selectedComponent,
-    setSelectedComponent,
+    setSelectedComponent: (comp: ComponentBlock | null) => setSelectedComponent(comp),
   };
 }

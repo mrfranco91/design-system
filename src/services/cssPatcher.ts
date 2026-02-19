@@ -29,15 +29,24 @@ export function patchCss(originalCss: string, patches: Patch[]): string {
 
   // Let's re-implement with a more direct, if less robust, approach for now.
   let css = originalCss;
+  // This is a simplified patcher. A robust solution would use an AST.
   for (const patch of patches) {
     if (patch.type === 'token') {
-      // This is still not ideal as it might replace the wrong value if tokens have identical values.
-      // A proper implementation needs start/end indices for the value itself.
       const tokenRegex = new RegExp(`(${patch.tokenName}:\s*)([^;]+)(;)`);
       css = css.replace(tokenRegex, `$1${patch.newValue}$3`);
+    } else if (patch.type === 'component-edit-prop') {
+      const propRegex = new RegExp(`(${patch.property}:\s*)([^;]+)(;)`);
+      // This is naive and will replace the first instance of the property, which might be wrong.
+      // A scope-aware replacement is needed for a robust solution.
+      css = css.replace(propRegex, `$1${patch.newValue}$3`);
+    } else if (patch.type === 'component-add-prop') {
+      const blockRegex = new RegExp(`(${escapeRegExp(patch.selectorName)}\s*\{[\s\S]*?)(})`);
+      css = css.replace(blockRegex, `$1  ${patch.property}: ${patch.newValue};\n$2`);
     }
   }
-  // Component patching is more complex and will be added later.
-
   return css;
+}
+
+function escapeRegExp(string: string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
